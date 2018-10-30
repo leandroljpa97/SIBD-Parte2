@@ -46,9 +46,9 @@ create table veterinary
 	  foreign key(VAT) references person(VAT));
 
 create table assistant
-	( VAT varchar(255),
-	  primary key(VAT),
-		foreign key(VAT) references person(VAT));
+   (VAT varchar(255),
+    primary key(VAT),
+    foreign key(VAT) references person(VAT));
 
 create table species
 	( name varchar(255),
@@ -69,23 +69,23 @@ create table animal(
 	colour varchar(255),
 	gender varchar(255),
 	birth_year date,
-	age integer, -- timestampdiff(curdate(), birth_year ),
+	age integer,
 	primary key(name, VAT),
 	foreign key(VAT) references client(VAT),
 	foreign key(species_name) references species(name));
 
 create table consult(
-	name varchar(255),
+  date_timestamp  timestamp,
+  name varchar(255),
 	VAT_owner varchar(255),
-	date_timestamp timestamp,
 	s varchar(255),
 	o varchar(255),
 	a varchar(255),
 	p varchar(255),
 	VAT_client varchar(255),
 	VAT_vet varchar(255),
-	weight numeric(3,2),
-	primary key(name, VAT_owner, date_timestamp),
+	weight numeric(5,2),
+	primary key(date_timestamp, name, VAT_owner),
 	foreign key(name) references animal(name),
 	foreign key(VAT_owner) references animal(VAT),
 	foreign key(VAT_client) references client(VAT),
@@ -93,14 +93,14 @@ create table consult(
 	check(weight>=0));
 
 create table participation(
+  date_timestamp  timestamp,
 	name varchar(255),
 	VAT_owner varchar(255),
-	date_timestamp timestamp,
 	VAT_assistant varchar(255),
-	primary key(name,VAT_owner,date_timestamp,VAT_assistant),
+	primary key(date_timestamp, name, VAT_owner, VAT_assistant),
+  foreign key(date_timestamp) references consult(date_timestamp),
 	foreign key(name) references consult(name),
 	foreign key(VAT_owner) references consult(VAT_owner),
-	foreign key(date_timestamp) references consult(date_timestamp),
 	foreign key(VAT_assistant) references assistant(VAT));
 
 create table diagnosis_code
@@ -110,38 +110,39 @@ create table diagnosis_code
 
 create table consult_diagnosis
    (code  varchar(255),
+    date_timestamp  timestamp,
     name  varchar(255),
     VAT_owner  varchar(255),
-    date_timestamp  timestamp,
-    primary key(code, name, VAT_owner, date_timestamp),
+    primary key(code, date_timestamp, name, VAT_owner),
     foreign key(code) references diagnosis_code(code),
+    foreign key(date_timestamp) references consult(date_timestamp),
     foreign key(name) references consult(name),
-    foreign key(VAT_owner) references consult(VAT_owner),
-    foreign key(date_timestamp) references consult(date_timestamp));
+    foreign key(VAT_owner) references consult(VAT_owner));
 
 create table medication
    (name  varchar(255),
     lab  varchar(255),
-    dosage  numeric(20,2),
+    dosage  numeric(20, 2),
     primary key(name, lab, dosage));
 
 create table prescription
    (code  varchar(255),
+    date_timestamp  timestamp,
     animal_name  varchar(255),
     VAT_owner  varchar(255),
-    date_timestamp  timestamp,
     medication_name varchar(255),
     lab  varchar(255),
-    dosage  varchar(255),
+    dosage  numeric(20, 2),
     regime  varchar(255),
-    primary key(code, animal_name, VAT_owner, date_timestamp, medication_name, lab, dosage),
+    primary key(code, date_timestamp, animal_name, VAT_owner, medication_name, lab, dosage),
     foreign key(code) references consult_diagnosis(code),
+    foreign key(date_timestamp) references consult_diagnosis(date_timestamp),
     foreign key(animal_name) references consult_diagnosis(name),
     foreign key(VAT_owner) references consult_diagnosis(VAT_owner),
-    foreign key(date_timestamp) references consult_diagnosis(date_timestamp),
-    foreign key(medication_name) references medication(name),
-    foreign key(lab) references medication(lab),
-    foreign key(dosage) references medication(dosage));
+    foreign key(medication_name, lab, dosage) references medication(name, lab, dosage)
+--    foreign key(lab) references medication(lab)
+--    foreign key(dosage) references medication(dosage)
+);
 
 create table indicator
    (name  varchar(255),
@@ -151,28 +152,28 @@ create table indicator
     primary key(name));
 
 create table procedures
-   (name  varchar(255),
-    VAT_owner  varchar(255),
+   (num  numeric(20, 0),
     date_timestamp  timestamp,
-    num  numeric(20, 0),
+    name  varchar(255),
+    VAT_owner  varchar(255),
     description  varchar(255),
-    primary key(name, VAT_owner, date_timestamp, num),
+    primary key(num, date_timestamp, name, VAT_owner),
+    foreign key(date_timestamp) references consult(date_timestamp),
     foreign key(name) references consult(name),
-    foreign key(VAT_owner) references consult(VAT_owner),
-    foreign key(date_timestamp) references consult(date_timestamp));
+    foreign key(VAT_owner) references consult(VAT_owner));
 
 create table performed
-   (name  varchar(255),
-    VAT_owner  varchar(255),
+   (num  numeric(20, 0),
     date_timestamp  timestamp,
-    num  numeric(20, 0),
+    name  varchar(255),
+    VAT_owner  varchar(255),
     VAT_assistant  varchar(255),
-    primary key(name, VAT_owner, date_timestamp, num, VAT_assistant),
+    primary key(num, date_timestamp, name, VAT_owner, VAT_assistant),
+    foreign key(num) references procedures(num),
+    foreign key(date_timestamp) references procedures(date_timestamp),
     foreign key(name) references procedures(name),
     foreign key(VAT_owner) references procedures(VAT_owner),
-    foreign key(date_timestamp) references procedures(date_timestamp),
-    foreign key(num) references procedures(num),
-    foreign key(VAT_assistant) references assistant(VAT_assistant));
+    foreign key(VAT_assistant) references assistant(VAT));
 
 create table radiography
    (name  varchar(255),
@@ -180,10 +181,10 @@ create table radiography
     date_timestamp  timestamp,
     num  numeric(20, 0),
     file  varchar(255),
-    primary key(name, VAT_owner, date_timestamp, num),
+    primary key(date_timestamp, name, VAT_owner, num),
+    foreign key(date_timestamp) references procedures(date_timestamp),
     foreign key(name) references procedures(name),
     foreign key(VAT_owner) references procedures(VAT_owner),
-    foreign key(date_timestamp) references procedures(date_timestamp),
     foreign key(num) references procedures(num));
 
 create table test_procedure
@@ -209,33 +210,36 @@ create table produced_indicator
     foreign key(name) references test_procedure(name),
     foreign key(VAT_owner) references test_procedure(VAT_owner),
     foreign key(date_timestamp) references test_procedure(date_timestamp),
-    foreign key(num) references test_procedure(num)
+    foreign key(num) references test_procedure(num),
     foreign key(indicator_name) references indicator(name));
 
 
-/*
 insert into person values ('000000000', 'John Smith', 'Main Street', 'New York', '1070-373');
 insert into person values ('000000001', 'John Smith', 'Second Street', 'Brooklyn', '1070-000');
 insert into person values ('000000002', 'John Doe', 'Main Street', 'Cleveland', '1000-373');
 insert into person values ('000000003', 'Bob Dylan', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000004', 'Chandler Bing', 'Big Avenue', 'Brooklyn', '1050-373');
+
 
 insert into client values ('000000000');
 insert into client values ('000000002');
 insert into client values ('000000003');
 
-insert into veterinary values ('000000001');
+insert into veterinary values ('000000001', 'doctor', 'just grew up to be a doctor');
+insert into veterinary values ('000000004', 'vet', 'just grew up to be a vet');
 
 insert into species values ('dog', 'human''s best friend');
 insert into species values ('cat', 'kinda grumpy. but if it fits, it sits!');
 
-insert into animal values ('doge', '000000000', 'dog', 'yellow', 'male', '1997-12-20');
-insert into animal values ('fluffy', '000000002', 'cat', 'black', 'female', '1997-12-27');
-insert into animal values ('alilas', '000000002', 'cat', 'brown', 'male', '1997-03-29');
+insert into animal values ('doge', '000000000', 'dog', 'yellow', 'male', '1997-12-20', 20);
+insert into animal values ('fluffy', '000000002', 'cat', 'black', 'female', '1997-12-27', 20);
+insert into animal values ('alilas', '000000002', 'cat', 'brown', 'male', '1997-03-29', 20);
 
-insert into consult values ('doge', '000000000', '2005-7-27 09:00:30.75', 's', 'o', 'a', 'p', '000000003', '000000001', 20);
-insert into consult values ('alilas', '000000002', '2005-7-28 09:00:30.75', 's', 'o', 'a', 'p', '000000000', '000000001', 20);
-insert into consult values ('alilas', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20);
-*/
+insert into consult(name, VAT_owner, date_timestamp, s, o, a, p, VAT_client, VAT_vet, weight) values
+('doge', '000000000', '2005-7-27 09:00:30.75', 's', 'o', 'a', 'p', '000000003', '000000001', 20),
+('alilas', '000000002', '2005-7-28 09:00:30.75', 's', 'o', 'a', 'p', '000000000', '000000001', 20),
+('alilas', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-7-30 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000004', 20);
 
 /* vat é numeric?
 phone 9 digitos?
