@@ -1,22 +1,22 @@
---1 meti distinct pq podem ir em datas diferentes ao mm gajo
-select distinct A.name, O.name, A.species_name, A.age
-from animal A, person V, consult C, person O
-where ((V.name ='John Smith')and V.VAT=C.VAT_vet)
-  and O.VAT=C.VAT_owner
-  and A.name=C.name;
+--1 meti distinct pq  o mesmo animal pode  ir em datas diferentes ao mm gajo
+select distinct animal.name, O.name, species_name, animal.age
+from animal natural join consult, person V, person O
+where ((V.name ='John Smith')and V.VAT=VAT_vet)
+  and O.VAT=consult.VAT_owner;
 
 --2
 select name, reference_value
 from indicator
-where units = "miligrams" and reference_value > 100
+where units = 'milligrams' and reference_value > 100
 order by reference_value desc;
 
 --3
 
 --4
-select name,VAT, address_street, address_city, address_zip
-from person
-where not exists (select VAT from animal );
+-- select name,VAT, address_street, address_city, address_zip
+select *
+from person  natural join client
+where VAT not in (select a.VAT from animal a );
 
 --5
 select code, count(distinct medication_name) as counter

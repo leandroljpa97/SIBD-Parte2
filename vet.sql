@@ -75,9 +75,9 @@ create table animal(
 	foreign key(species_name) references species(name));
 
 create table consult(
+    name varchar(255),
+      VAT_owner varchar(255),
   date_timestamp  timestamp,
-  name varchar(255),
-	VAT_owner varchar(255),
 	s varchar(255),
 	o varchar(255),
 	a varchar(255),
@@ -90,6 +90,8 @@ create table consult(
 	foreign key(VAT_client) references client(VAT),
 	foreign key(VAT_vet) references veterinary(VAT),
 	check(weight>=0));
+
+
 
 create table participation(
   date_timestamp  timestamp,
@@ -107,9 +109,9 @@ create table diagnosis_code
 
 create table consult_diagnosis
    (code  varchar(255),
-    date_timestamp  timestamp,
     name  varchar(255),
     VAT_owner  varchar(255),
+    date_timestamp  timestamp,
     primary key(code, date_timestamp, name, VAT_owner),
     foreign key(code) references diagnosis_code(code),
       foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
@@ -123,9 +125,9 @@ create table medication
 
 create table prescription
    (code  varchar(255),
-    date_timestamp  timestamp,
     animal_name  varchar(255),
     VAT_owner  varchar(255),
+    date_timestamp  timestamp,
     medication_name varchar(255),
     lab  varchar(255),
     dosage  numeric(20, 2),
@@ -191,6 +193,7 @@ create table produced_indicator
     foreign key(indicator_name) references indicator(name));
 
 
+
 insert into person values ('000000000', 'John Smith', 'Main Street', 'New York', '1070-373');
 insert into person values ('000000001', 'John Smith', 'Second Street', 'Brooklyn', '1070-000');
 insert into person values ('000000002', 'John Doe', 'Main Street', 'Cleveland', '1000-373');
@@ -212,11 +215,55 @@ insert into animal values ('doge', '000000000', 'dog', 'yellow', 'male', '1997-1
 insert into animal values ('fluffy', '000000002', 'cat', 'black', 'female', '1997-12-27', 20);
 insert into animal values ('alilas', '000000002', 'cat', 'brown', 'male', '1997-03-29', 20);
 
-insert into consult(name, VAT_owner, date_timestamp, s, o, a, p, VAT_client, VAT_vet, weight) values
+insert into consult (name, VAT_owner, date_timestamp, s, o, a, p, VAT_client, VAT_vet, weight) values
 ('doge', '000000000', '2005-7-27 09:00:30.75', 's', 'o', 'a', 'p', '000000003', '000000001', 20),
 ('alilas', '000000002', '2005-7-28 09:00:30.75', 's', 'o', 'a', 'p', '000000000', '000000001', 20),
 ('alilas', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
 ('alilas', '000000002', '2005-7-30 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000004', 20);
+
+
+
+
+/* POPULAR PARA CHECKAR A QUERY 2 */
+
+insert into indicator values ('globulos brancos', 900, 'milligrams', 'xxx');
+insert into indicator values ('globulos vermelhos', 50, 'milligrams', 'yy');
+insert into indicator values ('esteroides', 50, 'grams', 'wwww');
+insert into indicator values ('melanina', 500, 'grams', 'ooooo');
+insert into indicator values ('leucócitos', 110, 'milligrams', 'weeeerrrrrr');
+
+
+
+
+/* checkar a query 4 */
+insert into species values ('reptil', 'humans best friend');
+insert into species values ('passaro', 'humans best friend');
+insert into person values ('000000069', 'BONIFÁCIO', 'SJT Street', 'OLIVAIS', '1070-373');
+insert into client values ('000000069');
+insert into person values ('000000123', 'Veterinario_Joao', 'SJT Street', 'OLIVAIS', '1070-373');
+insert into veterinary values ('000000123', 'doctor', 'just grew up to be a doctor');
+insert into animal values ('tartaruga', '000000069', 'reptil', 'yellow', 'male', '1997-12-20', 20);
+insert into person values ('000000100', 'ABoubakar', 'rua do sangue', 'GUINÉ', '1070-373');
+insert into client values ('000000100');
+insert into animal values ('cegonha', '000000069', 'passaro', 'yellow', 'male', '1997-12-25', 20);
+
+
+
+
+-- checkar a query 5:
+insert into diagnosis_code values('vascoFit123','candeias');
+insert into consult_diagnosis values('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75');
+insert into medication values('benuron','ist',800);
+insert into medication values('brufen','ist',900);
+insert into prescription values ('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist',800,'xxxxx');
+insert into prescription values ('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist',900,'xxxxx');
+insert into diagnosis_code values('2797','candeias');
+insert into consult_diagnosis values('2797','doge','000000000', '2005-7-27 09:00:30.75');
+insert into medication values('gaviscom','azia',800);
+insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','gaviscom','azia',800,'xxxxx');
+insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist',900,'xxxxx');
+insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist',800,'xxxxx');
+
 
 /* vat é numeric?
 phone 9 digitos?
