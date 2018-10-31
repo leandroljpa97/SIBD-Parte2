@@ -86,8 +86,7 @@ create table consult(
 	VAT_vet varchar(255),
 	weight numeric(5,2),
 	primary key(date_timestamp, name, VAT_owner),
-	foreign key(name) references animal(name),
-	foreign key(VAT_owner) references animal(VAT),
+	foreign key(name,VAT_owner) references animal(name,VAT),
 	foreign key(VAT_client) references client(VAT),
 	foreign key(VAT_vet) references veterinary(VAT),
 	check(weight>=0));
@@ -98,9 +97,7 @@ create table participation(
 	VAT_owner varchar(255),
 	VAT_assistant varchar(255),
 	primary key(date_timestamp, name, VAT_owner, VAT_assistant),
-  foreign key(date_timestamp) references consult(date_timestamp),
-	foreign key(name) references consult(name),
-	foreign key(VAT_owner) references consult(VAT_owner),
+  foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner),
 	foreign key(VAT_assistant) references assistant(VAT));
 
 create table diagnosis_code
@@ -115,9 +112,8 @@ create table consult_diagnosis
     VAT_owner  varchar(255),
     primary key(code, date_timestamp, name, VAT_owner),
     foreign key(code) references diagnosis_code(code),
-    foreign key(date_timestamp) references consult(date_timestamp),
-    foreign key(name) references consult(name),
-    foreign key(VAT_owner) references consult(VAT_owner));
+      foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
+  
 
 create table medication
    (name  varchar(255),
@@ -135,13 +131,8 @@ create table prescription
     dosage  numeric(20, 2),
     regime  varchar(255),
     primary key(code, date_timestamp, animal_name, VAT_owner, medication_name, lab, dosage),
-    foreign key(code) references consult_diagnosis(code),
-    foreign key(date_timestamp) references consult_diagnosis(date_timestamp),
-    foreign key(animal_name) references consult_diagnosis(name),
-    foreign key(VAT_owner) references consult_diagnosis(VAT_owner),
+    foreign key(code,date_timestamp,animal_name,VAT_owner) references consult_diagnosis(code,date_timestamp,name,VAT_owner),
     foreign key(medication_name, lab, dosage) references medication(name, lab, dosage)
---    foreign key(lab) references medication(lab)
---    foreign key(dosage) references medication(dosage)
 );
 
 create table indicator
@@ -158,9 +149,7 @@ create table procedures
     VAT_owner  varchar(255),
     description  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner),
-    foreign key(date_timestamp) references consult(date_timestamp),
-    foreign key(name) references consult(name),
-    foreign key(VAT_owner) references consult(VAT_owner));
+      foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
 
 create table performed
    (num  numeric(20, 0),
@@ -169,10 +158,7 @@ create table performed
     VAT_owner  varchar(255),
     VAT_assistant  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner, VAT_assistant),
-    foreign key(num) references procedures(num),
-    foreign key(date_timestamp) references procedures(date_timestamp),
-    foreign key(name) references procedures(name),
-    foreign key(VAT_owner) references procedures(VAT_owner),
+    foreign key(num,date_timestamp,name,VAT_owner) references procedures(num,date_timestamp,name,VAT_owner),
     foreign key(VAT_assistant) references assistant(VAT));
 
 create table radiography
@@ -182,10 +168,7 @@ create table radiography
     num  numeric(20, 0),
     file  varchar(255),
     primary key(date_timestamp, name, VAT_owner, num),
-    foreign key(date_timestamp) references procedures(date_timestamp),
-    foreign key(name) references procedures(name),
-    foreign key(VAT_owner) references procedures(VAT_owner),
-    foreign key(num) references procedures(num));
+       foreign key(num,date_timestamp,name,VAT_owner) references procedures(num,date_timestamp,name,VAT_owner));
 
 create table test_procedure
    (name  varchar(255),
@@ -194,10 +177,7 @@ create table test_procedure
     num  numeric(20, 0),
     type  varchar(255),
     primary key(name, VAT_owner, date_timestamp, num),
-    foreign key(name) references procedures(name),
-    foreign key(VAT_owner) references procedures(VAT_owner),
-    foreign key(date_timestamp) references procedures(date_timestamp),
-    foreign key(num) references procedures(num));
+       foreign key(num,date_timestamp,name,VAT_owner) references procedures(num,date_timestamp,name,VAT_owner));
 
 create table produced_indicator
    (name  varchar(255),
@@ -207,10 +187,7 @@ create table produced_indicator
     indicator_name varchar(255),
     value  numeric(20, 0),
     primary key(name, VAT_owner, date_timestamp, num, indicator_name),
-    foreign key(name) references test_procedure(name),
-    foreign key(VAT_owner) references test_procedure(VAT_owner),
-    foreign key(date_timestamp) references test_procedure(date_timestamp),
-    foreign key(num) references test_procedure(num),
+    foreign key(name,VAT_owner,date_timestamp,num) references test_procedure(name,VAT_owner,date_timestamp,num),
     foreign key(indicator_name) references indicator(name));
 
 
