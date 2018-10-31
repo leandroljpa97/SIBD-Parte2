@@ -12,6 +12,13 @@ order by reference_value desc;
 
 --3
 
+select Per.name, An.name,species_name, age
+from  client natural join animal An natural join consult, person Per
+where weight > 30 and Per.VAT= client.VAT and (s like '%obesity%' or s like '%obese%' or o like '%obesity%'
+or o like '%obese%' or a like '%obesity%' or a like '%obese%' or p like '%obesity%' 
+or p like '%obese%');
+
+
 --4
 -- select name,VAT, address_street, address_city, address_zip
 select *
