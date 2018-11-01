@@ -1,8 +1,13 @@
 --1 meti distinct pq  o mesmo animal pode  ir em datas diferentes ao mm gajo
 select distinct animal.name, O.name, species_name, animal.age
-from animal natural join consult, person V, person O
+from consult natural join animal, person V, person O
 where ((V.name ='John Smith')and V.VAT=VAT_vet)
   and O.VAT=consult.VAT_owner;
+
+
+-- NAO CONSEGUI PERCEBER MT BEM SE ISTO OPTIMIZOU ALGO OU NAÃO...
+create index idx_person_name on person(name);
+create index idx_consult_Vat_vet on consult(VAT_vet);
 
 --2
 select name, reference_value
@@ -54,3 +59,26 @@ where VAT exists in(
   intersect
   select VAT from client);
 --9
+
+
+-- views:
+
+-- view 1
+create view dim_date as
+	(select  date_timestamp, DAY(date_timestamp) as day, MONTH(date_timestamp) as month, YEAR(date_timestamp) as year
+	 from consult);
+-- checkar a view nº 1
+select date_timestamp, day, month, year
+from dim_date;
+
+
+-- view 2
+create view dim_animal as 
+(select name as animal_name, VAT as animal_vat, species_name as species, age
+ from animal);
+-- checkar a view nº 2
+select animal_name, animal_vat, species, age
+from dim_animal;
+
+
+
