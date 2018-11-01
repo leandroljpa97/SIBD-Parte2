@@ -16,11 +16,10 @@ create index idx_indicator_units_reference_value on indicator(units, reference_v
 
 --3
 
-select Per.name, An.name,species_name, age
+select Per.name, An.name, species_name, age
 from  client natural join animal An natural join consult, person Per
-where weight > 30 and Per.VAT= client.VAT and (s like '%obesity%' or s like '%obese%' or o like '%obesity%'
-or o like '%obese%' or a like '%obesity%' or a like '%obese%' or p like '%obesity%'
-or p like '%obese%');
+where weight > 30 and Per.VAT= client.VAT and (
+  o like '%obesity%' or o like '%obese%');
 
 
 --4
