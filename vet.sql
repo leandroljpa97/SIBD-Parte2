@@ -115,7 +115,6 @@ create table consult_diagnosis
     primary key(code, date_timestamp, name, VAT_owner),
     foreign key(code) references diagnosis_code(code),
       foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
-  
 
 create table medication
    (name  varchar(255),
@@ -199,14 +198,30 @@ insert into person values ('000000001', 'John Smith', 'Second Street', 'Brooklyn
 insert into person values ('000000002', 'John Doe', 'Main Street', 'Cleveland', '1000-373');
 insert into person values ('000000003', 'Bob Dylan', 'Big Avenue', 'Brooklyn', '1050-373');
 insert into person values ('000000004', 'Chandler Bing', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000005', 'John Smith', 'Main Street', 'New York', '1070-373');
+insert into person values ('000000006', 'neuiwnes', 'Second Street', 'Brooklyn', '1070-000');
+insert into person values ('000000007', 'ceskjlcs', 'Main Street', 'Cleveland', '1000-373');
+insert into person values ('000000008', 'njkesmdc', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000009', 'miowekalea', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000010', 'ooi2kdlm', 'Second Street', 'Brooklyn', '1070-000');
+insert into person values ('000000011', 'l3pqwlçdkexa', 'Main Street', 'Cleveland', '1000-373');
+insert into person values ('000000012', 'njkeosmdc', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000013', 'miowjekalea', 'Big Avenue', 'Brooklyn', '1050-373');
 
 
 insert into client values ('000000000');
 insert into client values ('000000002');
 insert into client values ('000000003');
+  insert into client values ('000000006');
+insert into client values ('000000007');
+insert into client values ('000000005');
 
 insert into veterinary values ('000000001', 'doctor', 'just grew up to be a doctor');
 insert into veterinary values ('000000004', 'vet', 'just grew up to be a vet');
+insert into veterinary values ('000000013', 'vet', 'just grew up to be a vet');
+insert into veterinary values ('000000005', 'vet', 'just grew up to be a vet');
+insert into veterinary values ('000000011', 'vet', 'just grew up to be a vet');
+insert into veterinary values ('000000009', 'vet', 'just grew up to be a vet');
 
 insert into species values ('dog', 'human''s best friend');
 insert into species values ('cat', 'kinda grumpy. but if it fits, it sits!');
@@ -214,12 +229,30 @@ insert into species values ('cat', 'kinda grumpy. but if it fits, it sits!');
 insert into animal values ('doge', '000000000', 'dog', 'yellow', 'male', '1997-12-20', 20);
 insert into animal values ('fluffy', '000000002', 'cat', 'black', 'female', '1997-12-27', 20);
 insert into animal values ('alilas', '000000002', 'cat', 'brown', 'male', '1997-03-29', 20);
+insert into animal values ('jekwfnew', '000000006', 'cat', 'brown', 'male', '1997-03-29', 20);
+insert into animal values ('alilandro', '000000007', 'cat', 'brown', 'male', '1997-03-29', 20);
+insert into animal values ('nnduiejwk', '000000007', 'cat', 'brown', 'male', '1997-03-29', 20);
+insert into animal values ('njdkwfde', '000000005', 'cat', 'brown', 'male', '1997-03-29', 20);
 
 insert into consult (name, VAT_owner, date_timestamp, s, o, a, p, VAT_client, VAT_vet, weight) values
 ('doge', '000000000', '2005-7-27 09:00:30.75', 's', 'o', 'a', 'obesity', '000000003', '000000001', 31),
 ('alilas', '000000002', '2005-7-28 09:00:30.75', 's', 'o', 'a', 'p', '000000000', '000000001', 20),
 ('alilas', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
-('alilas', '000000002', '2005-7-30 09:00:30.75', 's', 'o', 'obese', 'p', '000000002', '000000004', 50);
+('alilandro', '000000007', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
+('fluffy', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('njdkwfde', '000000005', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000005', '000000009', 20),
+('alilas', '000000002', '2005-7-30 09:00:30.75', 's', 'o', 'obese', 'p', '000000002', '000000004', 50),
+('alilas', '000000002', '2005-7-31 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-8-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-9-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-10-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-1-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-2-27 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilas', '000000002', '2005-3-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('alilandro', '000000007', '2005-8-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
+('alilandro', '000000007', '2005-9-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
+('alilandro', '000000007', '2005-10-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
+('alilandro', '000000007', '2005-11-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20);
 
 
 
@@ -235,7 +268,7 @@ insert into indicator values ('leucócitos', 110, 'milligrams', 'weeeerrrrrr');
 
 
 
-/* checkar a query 4 */
+/* checkar a query 4
 insert into species values ('reptil', 'humans best friend');
 insert into species values ('passaro', 'humans best friend');
 insert into person values ('000000069', 'BONIFÁCIO', 'SJT Street', 'OLIVAIS', '1070-373');
@@ -263,7 +296,7 @@ insert into medication values('gaviscom','azia',800);
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','gaviscom','azia',800,'xxxxx');
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist',900,'xxxxx');
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist',800,'xxxxx');
-
+*/
 
 /* vat é numeric?
 phone 9 digitos?
