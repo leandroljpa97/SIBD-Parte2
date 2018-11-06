@@ -328,4 +328,5 @@ test type = blood ou urin
 assumirmos que nomes são no formato John Smith
 no updaate 4 temos de checkar se ele tinha kidney failure
 não me faz muito sentido o update 4. o diagnóstico está associado a uma consulta... por isso mudamos da última consulta? ou de todas?
+nomes de indicadores e assim são únicos?
 */

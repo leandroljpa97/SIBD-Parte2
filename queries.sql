@@ -111,4 +111,7 @@ where name='John Smith'
 --2
 update indicator natural join produced_indicator natural join test_procedure
 set reference_value= reference_value*1.1
-where units='milligrams' and type='blood';
+where units = 'milligrams' and type = 'blood';
+
+--4
+update 
