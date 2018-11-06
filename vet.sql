@@ -39,11 +39,11 @@ create table client
     foreign key(VAT) references person(VAT));
 
 create table veterinary
-	( VAT varchar(255),
-	  specialization varchar(255),
-	  bio varchar(255),
-	  primary key(VAT),
-	  foreign key(VAT) references person(VAT));
+  ( VAT varchar(255),
+    specialization varchar(255),
+    bio varchar(255),
+    primary key(VAT),
+    foreign key(VAT) references person(VAT));
 
 create table assistant
    (VAT varchar(255),
@@ -51,56 +51,56 @@ create table assistant
     foreign key(VAT) references person(VAT));
 
 create table species
-	( name varchar(255),
-	  description varchar(255),
-	  primary key(name));
+  ( name varchar(255),
+    description varchar(255),
+    primary key(name));
 
 create table generalization_species
-	  (name1 varchar(255),
-		 name2 varchar(255),
-		 primary key(name1),
-		 foreign key(name1) references species(name),
-		 foreign key(name2) references species(name));
+    (name1 varchar(255),
+     name2 varchar(255),
+     primary key(name1),
+     foreign key(name1) references species(name),
+     foreign key(name2) references species(name));
 
 create table animal(
-	name varchar(255),
-	VAT varchar(255),
-	species_name varchar(255),
-	colour varchar(255),
-	gender varchar(255),
-	birth_year date,
-	age integer,
-	primary key(name, VAT),
-	foreign key(VAT) references client(VAT),
-	foreign key(species_name) references species(name));
+  name varchar(255),
+  VAT varchar(255),
+  species_name varchar(255),
+  colour varchar(255),
+  gender varchar(255),
+  birth_year date,
+  age integer,
+  primary key(name, VAT),
+  foreign key(VAT) references client(VAT),
+  foreign key(species_name) references species(name));
 
 create table consult(
     name varchar(255),
       VAT_owner varchar(255),
   date_timestamp  timestamp,
-	s varchar(255),
-	o varchar(255),
-	a varchar(255),
-	p varchar(255),
-	VAT_client varchar(255),
-	VAT_vet varchar(255),
-	weight numeric(5,2),
-	primary key(date_timestamp, name, VAT_owner),
-	foreign key(name,VAT_owner) references animal(name,VAT),
-	foreign key(VAT_client) references client(VAT),
-	foreign key(VAT_vet) references veterinary(VAT),
-	check(weight>=0));
+  s varchar(255),
+  o varchar(255),
+  a varchar(255),
+  p varchar(255),
+  VAT_client varchar(255),
+  VAT_vet varchar(255),
+  weight numeric(5,2),
+  primary key(date_timestamp, name, VAT_owner),
+  foreign key(name,VAT_owner) references animal(name,VAT),
+  foreign key(VAT_client) references client(VAT),
+  foreign key(VAT_vet) references veterinary(VAT),
+  check(weight>=0));
 
 
 
 create table participation(
   date_timestamp  timestamp,
-	name varchar(255),
-	VAT_owner varchar(255),
-	VAT_assistant varchar(255),
-	primary key(date_timestamp, name, VAT_owner, VAT_assistant),
+  name varchar(255),
+  VAT_owner varchar(255),
+  VAT_assistant varchar(255),
+  primary key(date_timestamp, name, VAT_owner, VAT_assistant),
   foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner),
-	foreign key(VAT_assistant) references assistant(VAT));
+  foreign key(VAT_assistant) references assistant(VAT));
 
 create table diagnosis_code
    (code  varchar(255),
@@ -207,6 +207,8 @@ insert into person values ('000000010', 'ooi2kdlm', 'Second Street', 'Brooklyn',
 insert into person values ('000000011', 'l3pqwlçdkexa', 'Main Street', 'Cleveland', '1000-373');
 insert into person values ('000000012', 'njkeosmdc', 'Big Avenue', 'Brooklyn', '1050-373');
 insert into person values ('000000013', 'miowjekalea', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000014', 'Vasquinho', 'Big Avenue', 'Brooklyn', '1050-373');
+insert into person values ('000000015', 'Joaquim', 'Big Avenue', 'Brooklyn', '1050-373');
 
 
 insert into client values ('000000000');
@@ -215,6 +217,8 @@ insert into client values ('000000003');
   insert into client values ('000000006');
 insert into client values ('000000007');
 insert into client values ('000000005');
+insert into client values ('000000014');
+insert into client values ('000000015');
 
 insert into veterinary values ('000000001', 'doctor', 'just grew up to be a doctor');
 insert into veterinary values ('000000004', 'vet', 'just grew up to be a vet');
@@ -224,9 +228,20 @@ insert into veterinary values ('000000011', 'vet', 'just grew up to be a vet');
 insert into veterinary values ('000000009', 'vet', 'just grew up to be a vet');
 
 insert into species values ('dog', 'human''s best friend');
+insert into species values ('bird', 'human''s best friend');
+insert into species values ('xbirdssss', 'human''s best friend');
+
+
+
 insert into species values ('cat', 'kinda grumpy. but if it fits, it sits!');
 
 insert into animal values ('doge', '000000000', 'dog', 'yellow', 'male', '1997-12-20', 20);
+insert into animal values ('xxxxxxx', '000000000', 'cat', 'yellow', 'male', '1997-12-20', 20);
+insert into animal values ('piriquito', '000000014', 'bird', 'yellow', 'male', '1997-12-20', 20);
+insert into animal values ('kiko', '000000014', 'dog', 'yellow', 'male', '1997-12-20', 20);
+insert into animal values ('piupiu', '000000015', 'bird', 'yellow', 'male', '1997-12-20', 20);
+insert into animal values ('piupiu2', '000000015', 'xbirdssss', 'yellow', 'male', '1997-12-20', 20);
+
 insert into animal values ('fluffy', '000000002', 'cat', 'black', 'female', '1997-12-27', 20);
 insert into animal values ('alilas', '000000002', 'cat', 'brown', 'male', '1997-03-29', 20);
 insert into animal values ('jekwfnew', '000000006', 'cat', 'brown', 'male', '1997-03-29', 20);
@@ -252,7 +267,7 @@ insert into consult (name, VAT_owner, date_timestamp, s, o, a, p, VAT_client, VA
 ('alilandro', '000000007', '2005-8-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
 ('alilandro', '000000007', '2005-9-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
 ('alilandro', '000000007', '2005-10-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
-('alilandro', '000000007', '2005-11-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20);
+('alilandro', '000000007', '2017-11-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20);
 
 
 
@@ -268,7 +283,7 @@ insert into indicator values ('leucócitos', 110, 'milligrams', 'weeeerrrrrr');
 
 
 
-/* checkar a query 4
+-- checkar a query 4
 insert into species values ('reptil', 'humans best friend');
 insert into species values ('passaro', 'humans best friend');
 insert into person values ('000000069', 'BONIFÁCIO', 'SJT Street', 'OLIVAIS', '1070-373');
@@ -279,10 +294,6 @@ insert into animal values ('tartaruga', '000000069', 'reptil', 'yellow', 'male',
 insert into person values ('000000100', 'ABoubakar', 'rua do sangue', 'GUINÉ', '1070-373');
 insert into client values ('000000100');
 insert into animal values ('cegonha', '000000069', 'passaro', 'yellow', 'male', '1997-12-25', 20);
-
-
-
-
 -- checkar a query 5:
 insert into diagnosis_code values('vascoFit123','candeias');
 insert into consult_diagnosis values('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75');
@@ -296,7 +307,7 @@ insert into medication values('gaviscom','azia',800);
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','gaviscom','azia',800,'xxxxx');
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist',900,'xxxxx');
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist',800,'xxxxx');
-*/
+
 
 /* vat é numeric?
 phone 9 digitos?

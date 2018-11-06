@@ -41,6 +41,11 @@ order by counter asc;
 
 --6
 
+ select count(*)
+from consult natural join consult_diagnosis where date_timestamp>'2017-1-1' ;
+group by consult;
+
+
 --7
 /*
 select name2, max(count(*))
@@ -58,7 +63,23 @@ where VAT exists in(
   select VAT from assistant
   intersect
   select VAT from client);
+
+
 --9
+
+
+
+select distinct p.name, p.vat, address_zip,address_city,address_street
+from person as p
+where exists
+(select a.VAT
+from animal as a
+where a.species_name like '%bird%' and a.VAT not in
+(select a2.VAT 
+from animal as a2
+where a2.species_name not like '%bird%'));
+
+
 
 
 -- views:
