@@ -20,18 +20,18 @@ create index idx_indicator_units_reference_value on indicator(units, reference_v
 
 
 --3
-
 select Per.name, An.name, species_name, age
 from  client natural join animal An natural join consult, person Per
-where weight > 30 and Per.VAT= client.VAT and (
-  o like '%obesity%' or o like '%obese%');
+where weight > 30 and Per.VAT= client.VAT  and (o like '%obesity%' or o like '%obese%')
+and date_timestamp in (select max(date_timestamp) from animal as a natural join consult
+where a.VAT=An.VAT and a.name=An.name
+group by a.VAT, a.name);
 
 
 --4
--- select name,VAT, address_street, address_city, address_zip
 select *
 from person  natural join client
-where VAT not in (select a.VAT from animal a );
+where VAT not in (select a.VAT from animal a);
 
 --5
 select code, count(distinct medication_name) as counter
@@ -40,8 +40,7 @@ group by code
 order by counter asc;
 
 --6
-
- select count(*)
+select count(*)
 from consult natural join consult_diagnosis where date_timestamp>'2017-1-1' ;
 group by consult;
 
@@ -56,19 +55,14 @@ group by code
 
 --8
 select name
-from person
-where VAT exists in(
+from person natural join client
+where VAT in(
   select VAT from veterinary
   union
-  select VAT from assistant
-  intersect
-  select VAT from client);
+  select VAT from assistant);
 
 
 --9
-
-
-
 select distinct p.name, p.vat, address_zip,address_city,address_street
 from person as p
 where exists
@@ -78,9 +72,6 @@ where a.species_name like '%bird%' and a.VAT not in
 (select a2.VAT
 from animal as a2
 where a2.species_name not like '%bird%'));
-
-
-
 
 -- views:
 
@@ -114,4 +105,18 @@ set reference_value= reference_value*1.1
 where units = 'milligrams' and type = 'blood';
 
 --4
-update 
+update consult_diagnosis
+set code = (select code from diagnosis_code where name = 'end-stage renal disease'),
+date_timestamp = date_timestamp, name = name,
+VAT_owner = VAT_owner
+where code = (select code from diagnosis_code where name = 'kidney failure');
+
+update (consult_diagnosis natural join test_procedure natural join produced_indicator)
+set code = (select code from diagnosis_code where name = 'end-stage renal disease'),
+date_timestamp = date_timestamp,
+name = name,
+VAT_owner = VAT_owner
+where code = (select code from diagnosis_code where name = 'kidney failure')
+and type = 'blood'
+and indicator_name = 'creatinine level'
+and value > 1;
