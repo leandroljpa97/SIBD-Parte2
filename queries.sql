@@ -75,7 +75,7 @@ where exists
 (select a.VAT
 from animal as a
 where a.species_name like '%bird%' and a.VAT not in
-(select a2.VAT 
+(select a2.VAT
 from animal as a2
 where a2.species_name not like '%bird%'));
 
@@ -100,3 +100,15 @@ create view dim_animal as
 -- checkar a view nº 2
 select animal_name, animal_vat, species, age
 from dim_animal;
+
+--updates:
+
+--1
+update person natural join client
+set address_street='Rua da Bela Vista', address_city='Lisboa', address_zip='2695'
+where name='John Smith'
+
+--2
+update indicator natural join produced_indicator natural join test_procedure
+set reference_value= reference_value*1.1
+where units='milligrams' and type='blood';

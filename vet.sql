@@ -91,8 +91,6 @@ create table consult(
   foreign key(VAT_vet) references veterinary(VAT),
   check(weight>=0));
 
-
-
 create table participation(
   date_timestamp  timestamp,
   name varchar(255),
@@ -114,7 +112,7 @@ create table consult_diagnosis
     date_timestamp  timestamp,
     primary key(code, date_timestamp, name, VAT_owner),
     foreign key(code) references diagnosis_code(code),
-      foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
+    foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
 
 create table medication
    (name  varchar(255),
@@ -138,7 +136,7 @@ create table prescription
 
 create table indicator
    (name  varchar(255),
-    reference_value  numeric(10, 0),
+    reference_value  numeric(10, 2),
     units  varchar(255),
     description  varchar(255),
     primary key(name));
@@ -150,7 +148,7 @@ create table procedures
     VAT_owner  varchar(255),
     description  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner),
-      foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
+    foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
 
 create table performed
    (num  numeric(20, 0),
@@ -178,7 +176,7 @@ create table test_procedure
     num  numeric(20, 0),
     type  varchar(255),
     primary key(name, VAT_owner, date_timestamp, num),
-       foreign key(num,date_timestamp,name,VAT_owner) references procedures(num,date_timestamp,name,VAT_owner));
+    foreign key(num,date_timestamp,name,VAT_owner) references procedures(num,date_timestamp,name,VAT_owner));
 
 create table produced_indicator
    (name  varchar(255),
@@ -303,10 +301,20 @@ insert into prescription values ('vascoFit123','doge','000000000', '2005-7-27 09
 insert into prescription values ('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist',900,'xxxxx');
 insert into diagnosis_code values('2797','candeias');
 insert into consult_diagnosis values('2797','doge','000000000', '2005-7-27 09:00:30.75');
-insert into medication values('gaviscom','azia',800);
+insert into medication values('gaviscom', 'azia', 800);
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','gaviscom','azia',800,'xxxxx');
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist',900,'xxxxx');
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist',800,'xxxxx');
+
+
+-- update 4
+insert into diagnosis_code values('1111', 'kidney failure');
+insert into diagnosis_code values('2222', 'end-stage renal disease');
+insert into indicator values ('creatinine level', 0.6, 'milligrams per deciliter', 'weeeerrrrrr');
+insert into procedures values (1, '2005-7-27 09:00:30.75', 'doge', '000000000', 'testing for creatinine level');
+insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75', 1, 'blood');
+insert into consult_diagnosis values ('1111', 'doge', '000000000', '2005-7-27 09:00:30.75');
+
 
 
 /* vat é numeric?
@@ -318,5 +326,6 @@ tamanhos dos numeric
 gender = male ou female (ou unknown)
 test type = blood ou urin
 assumirmos que nomes são no formato John Smith
-tive de tirar timestamp porque n dava como foreign key. temos de ver!
+no updaate 4 temos de checkar se ele tinha kidney failure
+não me faz muito sentido o update 4. o diagnóstico está associado a uma consulta... por isso mudamos da última consulta? ou de todas?
 */
