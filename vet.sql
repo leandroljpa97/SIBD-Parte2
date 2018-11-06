@@ -142,10 +142,10 @@ create table indicator
     primary key(name));
 
 create table procedures
-   (num  numeric(20, 0),
-    date_timestamp  timestamp,
-    name  varchar(255),
+   (name  varchar(255),
     VAT_owner  varchar(255),
+    date_timestamp  timestamp,
+    num  numeric(20, 0),
     description  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner),
     foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
@@ -307,15 +307,47 @@ insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.
 insert into prescription values ('2797','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist',800,'xxxxx');
 
 
+
+insert into procedures values ('doge', '000000000', '2005-7-27 09:00:30.75',7,'kjkpjk');
+insert into procedures values ('doge', '000000000', '2005-7-27 09:00:30.75',2,'kjkpjk');
+insert into procedures values ('doge', '000000000', '2005-7-27 09:00:30.75',3,'kjkpjk');
+insert into procedures values ('alilas', '000000002', '2005-7-29 09:00:30.75',1,'olaaa');
+insert into procedures values ('alilas', '000000002', '2005-7-29 09:00:30.75',2,'olaa1');
+insert into procedures values ('alilas', '000000002', '2005-7-29 09:00:30.75',3,'olaa2');
+insert into procedures values ('alilas', '000000002', '2005-7-29 09:00:30.75',4,'olaa3');
+insert into procedures values ('alilandro', '000000007', '2005-8-29 09:00:30.75',1,'proc1');
+insert into procedures values ('alilas', '000000002', '2005-2-27 09:00:30.75',1,'kjkj');
+
+insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75', 7, 'blood');
+insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75',2, 'blood');
+insert into test_procedure values ('alilas', '000000002', '2005-7-29 09:00:30.75',4,'blood');
+insert into test_procedure values ('alilas', '000000002', '2005-7-29 09:00:30.75',3, 'blood');
+insert into test_procedure values ('alilas', '000000002', '2005-2-27 09:00:30.75',1, 'radiography');
+insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75',3, 'radiography');
+
+
+
+
+
+insert into produced_indicator values('doge', '000000000', '2005-7-27 09:00:30.75', 7,'globulos brancos',200);
+insert into produced_indicator values('doge', '000000000', '2005-7-27 09:00:30.75',2,'globulos brancos',200);
+insert into produced_indicator values('alilas', '000000002', '2005-7-29 09:00:30.75',4,'globulos brancos',200);
+insert into produced_indicator values('alilas', '000000002', '2005-7-29 09:00:30.75',3,'globulos brancos',200);
+insert into produced_indicator values('alilas', '000000002', '2005-2-27 09:00:30.75',1,'globulos brancos',200);
+insert into produced_indicator values('doge', '000000000', '2005-7-27 09:00:30.75',3,'globulos brancos',200);
+
+
 -- update 4
+
+/*
 insert into diagnosis_code values('1111', 'kidney failure');
 insert into diagnosis_code values('2222', 'end-stage renal disease');
 insert into indicator values ('creatinine level', 0.6, 'milligrams per deciliter', 'weeeerrrrrr');
-insert into procedures values (1, '2005-7-27 09:00:30.75', 'doge', '000000000', 'testing for creatinine level');
+insert into procedures values ( 'doge', '000000000','2005-7-27 09:00:30.75',1, 'testing for creatinine level');
 insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75', 1, 'blood');
 insert into consult_diagnosis values ('1111', 'doge', '000000000', '2005-7-27 09:00:30.75');
 
-
+*/
 
 /* vat é numeric?
 phone 9 digitos?

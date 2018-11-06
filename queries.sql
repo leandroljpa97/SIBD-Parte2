@@ -66,20 +66,15 @@ where VAT exists in(
 
 
 --9
-
-
-
 select distinct p.name, p.vat, address_zip,address_city,address_street
 from person as p
-where exists
+where p.vat in 
 (select a.VAT
 from animal as a
 where a.species_name like '%bird%' and a.VAT not in
 (select a2.VAT
 from animal as a2
 where a2.species_name not like '%bird%'));
-
-
 
 
 -- views:
@@ -109,6 +104,6 @@ set address_street='Rua da Bela Vista', address_city='Lisboa', address_zip='2695
 where name='John Smith'
 
 --2
-update indicator natural join produced_indicator natural join test_procedure
-set reference_value= reference_value*1.1
+update  test_procedure natural join produced_indicator inner join indicator  on produced_indicator.indicator_name=indicator.name
+set reference_value= reference_value*1.1 
 where units='milligrams' and type='blood';
