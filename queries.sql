@@ -18,14 +18,14 @@ order by reference_value desc;
 --index
 create index idx_indicator_units_reference_value on indicator(units, reference_value);
 
-
 --3
-select Per.name, An.name, species_name, age
-from  client natural join animal An natural join consult, person Per
-where weight > 30 and Per.VAT= client.VAT  and (o like '%obesity%' or o like '%obese%')
-and date_timestamp in (select max(date_timestamp) from animal as a natural join consult
-where a.VAT=An.VAT and a.name=An.name
-group by a.VAT, a.name);
+select person.name, animal.name, species_name, age
+from client natural join animal natural join consult inner join person on client.VAT = person.VAT
+where weight > 30 and (o like '%obesity%' or o like '%obese%')
+and date_timestamp in (
+  select max(date_timestamp) from animal as a natural join consult
+  where a.VAT=animal.VAT and a.name=An.name
+  group by a.VAT, a.name);
 
 
 --4
@@ -40,14 +40,6 @@ group by code
 order by counter asc;
 
 --6
-select count(*)
-from consult natural join consult_diagnosis where date_timestamp>'2017-1-1' ;
-group by consult;
-
-select count(distinct consult.name, consult.VAT_owner, consult.date_timestamp)/(count(distinct animal.VAT, animal.name) as average_consults
-from animal natural left outer join consult;
-
---this
 select
 count(distinct participation.name, participation.VAT_owner, participation.date_timestamp, participation.VAT_assistant)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_assistants,
 count(distinct proced.name, proced.VAT_owner, proced.date_timestamp, proced.num)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_procedures,
@@ -58,32 +50,16 @@ where YEAR(date_timestamp) = 2017;
 
 
 --7
-select name1 as breed, diagnosis_code.name
-from generalization_species inner join animal on species_name = name1
+select name1, diagnosis_code.name
+from (generalization_species as g1) inner join animal on species_name = name1
 natural join consult_diagnosis
 inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-where name2 = 'dog' group by breed, diagnosis_code.name
+where name2 = 'dog' group by name1, diagnosis_code.name
 having count(*) >= all(
   select count(*)
-  from generalization_species inner join animal on species_name = name1
-  natural join consult_diagnosis
-  inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-  where name2 = 'dog' group by breed, diagnosis_code.name);
-
-
-
-select name1 as breed, diagnosis_code.name
-from generalization_species inner join animal on species_name = name1
-natural join consult_diagnosis
-inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-where name2 = 'dog' group by breed, diagnosis_code.name
-having count(*) >= all(
-  select count(*)
-  from generalization_species inner join animal on species_name = name1
-  natural join consult_diagnosis
-  inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-  where name2 = 'dog' group by breed, diagnosis_code.name);
-
+  from animal natural join consult_diagnosis
+  inner join (diagnosis_code as d2) on consult_diagnosis.code = d2.code
+  where animal.species_name=g1.name1 group by d2.name);
 
 --8
 select name
@@ -104,6 +80,12 @@ where a.species_name like '%bird%' and a.VAT not in
 (select a2.VAT
 from animal as a2
 where a2.species_name not like '%bird%'));
+
+select distinct p.name, p.vat, address_zip, address_city, address_street
+from person as p inner join animal on p.VAT=animal.VAT
+where p.vat not in (select a2.VAT
+from animal as a2
+where a2.species_name not like '%bird%');
 
 -- views:
 
@@ -141,12 +123,6 @@ set reference_value= reference_value*1.1
 where units='milligrams' and type='blood';
 
 --4
-update consult_diagnosis
-set code = (select code from diagnosis_code where name = 'end-stage renal disease'),
-date_timestamp = date_timestamp, name = name,
-VAT_owner = VAT_owner
-where code = (select code from diagnosis_code where name = 'kidney failure');
-
 update (consult_diagnosis natural join test_procedure natural join produced_indicator)
 set code = (select code from diagnosis_code where name = 'end-stage renal disease'),
 date_timestamp = date_timestamp,
