@@ -53,6 +53,18 @@ where species_name='dog' and consult_diagnosis.name=generalization_species.name2
 group by code
 */
 
+select name1 as breed, diagnosis_code.name
+from generalization_species inner join animal on species_name = name1
+natural join consult_diagnosis
+inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
+where name2 = 'dog' and counter >
+
+select name1 as breed, diagnosis_code.name, count(*)
+from generalization_species inner join animal on species_name = name1
+natural join consult_diagnosis
+inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
+where name2 = 'dog' group by breed, diagnosis_code.name;
+
 --8
 select name
 from person natural join client
@@ -65,7 +77,7 @@ where VAT in(
 --9
 select distinct p.name, p.vat, address_zip,address_city,address_street
 from person as p
-where exists
+where p.vat in
 (select a.VAT
 from animal as a
 where a.species_name like '%bird%' and a.VAT not in
@@ -103,6 +115,10 @@ where name='John Smith'
 update indicator natural join produced_indicator natural join test_procedure
 set reference_value= reference_value*1.1
 where units = 'milligrams' and type = 'blood';
+
+update  test_procedure natural join produced_indicator inner join indicator  on produced_indicator.indicator_name=indicator.name
+set reference_value= reference_value*1.1
+where units='milligrams' and type='blood';
 
 --4
 update consult_diagnosis

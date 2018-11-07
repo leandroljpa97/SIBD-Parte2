@@ -146,6 +146,8 @@ create table proced
     date_timestamp  timestamp,
     name  varchar(255),
     VAT_owner  varchar(255),
+    date_timestamp  timestamp,
+    num  numeric(20, 0),
     description  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner),
     foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
