@@ -122,16 +122,16 @@ create table medication
 
 create table prescription
    (code  varchar(255),
-    animal_name  varchar(255),
+    name  varchar(255),
     VAT_owner  varchar(255),
     date_timestamp  timestamp,
-    medication_name varchar(255),
+    name_med varchar(255),
     lab  varchar(255),
     dosage  numeric(20, 2),
     regime  varchar(255),
-    primary key(code, date_timestamp, animal_name, VAT_owner, medication_name, lab, dosage),
-    foreign key(code,date_timestamp,animal_name,VAT_owner) references consult_diagnosis(code,date_timestamp,name,VAT_owner) on update cascade,
-    foreign key(medication_name, lab, dosage) references medication(name, lab, dosage)
+    primary key(code, date_timestamp, name, VAT_owner, name_med, lab, dosage),
+    foreign key(code,date_timestamp,name,VAT_owner) references consult_diagnosis(code,date_timestamp,name,VAT_owner) on update cascade,
+    foreign key(name_med, lab, dosage) references medication(name, lab, dosage)
 );
 
 create table indicator
@@ -260,10 +260,10 @@ insert into animal values ('cegonha', '000000069', 'passaro', 'yellow', 'male', 
 insert into animal values ('tartaruga', '000000069', 'fish', 'yellow', 'male', '1997-12-20', 20);
 
 insert into consult (name, VAT_owner, date_timestamp, s, o, a, p, VAT_client, VAT_vet, weight) values
-('doge', '000000000', '2005-7-27 09:00:30.75', 's', 'obesity', 'a', 'p', '000000003', '000000001', 31),
-('doge', '000000000', '2005-8-27 09:00:30.75', 's', 'obesity', 'a', 'p', '000000003', '000000001', 34),
-('alilas', '000000002', '2005-7-28 09:00:30.75', 's', 'o', 'a', 'p', '000000000', '000000001', 20),
-('alilas', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
+('doge', '000000000', '2017-7-27 09:00:30.75', 's', 'obesity', 'a', 'p', '000000003', '000000001', 31),
+('doge', '000000000', '2017-8-27 09:00:30.75', 's', 'obesity', 'a', 'p', '000000003', '000000001', 34),
+('alilas', '000000002', '2017-7-28 09:00:30.75', 's', 'o', 'a', 'p', '000000000', '000000001', 20),
+('alilas', '000000002', '2017-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
 ('alilandro', '000000007', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000007', '000000009', 20),
 ('fluffy', '000000002', '2005-7-29 09:00:30.75', 's', 'o', 'a', 'p', '000000002', '000000001', 20),
 ('Garfield', '000000005', '2005-7-29 09:00:30.75', 's', 'obese', 'a', 'p', '000000005', '000000009', 31),
@@ -285,19 +285,19 @@ insert into diagnosis_code values('1111', 'kidney failure');
 insert into diagnosis_code values('2222', 'end-stage renal disease');
 insert into diagnosis_code values('7','candeias');
 
-insert into consult_diagnosis values ('1111', 'doge', '000000000', '2005-7-27 09:00:30.75');
-insert into consult_diagnosis values('vascoFit123', 'doge','000000000', '2005-7-27 09:00:30.75');
-insert into consult_diagnosis values('7','doge','000000000', '2005-7-27 09:00:30.75');
+insert into consult_diagnosis values ('1111', 'doge', '000000000', '2017-7-27 09:00:30.75');
+insert into consult_diagnosis values('vascoFit123', 'doge','000000000', '2017-7-27 09:00:30.75');
+insert into consult_diagnosis values('7','doge','000000000', '2017-7-27 09:00:30.75');
 
 insert into medication values('gaviscom', 'azia', 800);
 insert into medication values('benuron', 'ist', 800);
 insert into medication values('brufen', 'ist', 900);
 
-insert into prescription values ('1111', 'doge', '000000000', '2005-7-27 09:00:30.75', 'gaviscom', 'azia', 800, 'xxxxx');
-insert into prescription values ('7','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist', 900,'xxxxx');
-insert into prescription values ('7','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist', 800,'xxxxx');
-insert into prescription values ('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75','benuron','ist', 800,'xxxxx');
-insert into prescription values ('vascoFit123','doge','000000000', '2005-7-27 09:00:30.75','brufen','ist', 900,'xxxxx');
+insert into prescription values ('1111', 'doge', '000000000', '2017-7-27 09:00:30.75', 'gaviscom', 'azia', 800, 'xxxxx');
+insert into prescription values ('7','doge','000000000', '2017-7-27 09:00:30.75','brufen','ist', 900,'xxxxx');
+insert into prescription values ('7','doge','000000000', '2017-7-27 09:00:30.75','benuron','ist', 800,'xxxxx');
+insert into prescription values ('vascoFit123','doge','000000000', '2017-7-27 09:00:30.75','benuron','ist', 800,'xxxxx');
+insert into prescription values ('vascoFit123','doge','000000000', '2017-7-27 09:00:30.75','brufen','ist', 900,'xxxxx');
 
 insert into indicator values ('globulos brancos', 900, 'milligrams', 'xxx');
 insert into indicator values ('globulos vermelhos', 50, 'milligrams', 'yy');
@@ -306,14 +306,14 @@ insert into indicator values ('melanina', 500, 'grams', 'ooooo');
 insert into indicator values ('leucócitos', 110, 'milligrams', 'weeeerrrrrr');
 insert into indicator values ('creatinine level', 0.6, 'milligrams per deciliter', 'weeeerrrrrr');
 
-insert into proced values (1, '2005-7-27 09:00:30.75', 'doge', '000000000', 'testing for creatinine level');
-insert into proced values (2, '2005-7-27 09:00:30.75', 'doge', '000000000', 'testing for other level');
+insert into proced values (1, '2017-7-27 09:00:30.75', 'doge', '000000000', 'testing for creatinine level');
+insert into proced values (2, '2017-7-27 09:00:30.75', 'doge', '000000000', 'testing for other level');
 
-insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75', 1, 'blood');
-insert into test_procedure values ('doge', '000000000', '2005-7-27 09:00:30.75', 2, 'blood');
+insert into test_procedure values ('doge', '000000000', '2017-7-27 09:00:30.75', 1, 'blood');
+insert into test_procedure values ('doge', '000000000', '2017-7-27 09:00:30.75', 2, 'blood');
 
-insert into produced_indicator values ('doge', '000000000', '2005-7-27 09:00:30.75', 1, 'creatinine level', 1.1);
-insert into produced_indicator values ('doge', '000000000', '2005-7-27 09:00:30.75', 2, 'melanina', 500);
+insert into produced_indicator values ('doge', '000000000', '2017-7-27 09:00:30.75', 1, 'creatinine level', 1.1);
+insert into produced_indicator values ('doge', '000000000', '2017-7-27 09:00:30.75', 2, 'melanina', 500);
 
 
 /* vat é numeric?

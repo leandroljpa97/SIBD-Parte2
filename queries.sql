@@ -53,47 +53,22 @@ count(distinct participation.name, participation.VAT_owner, participation.date_t
 count(distinct proced.name, proced.VAT_owner, proced.date_timestamp, proced.num)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_procedures,
 count(distinct consult_diagnosis.code)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_diagnostic_codes,
 count(distinct prescription.name, prescription.VAT_owner, prescription.date_timestamp, prescription.code, prescription.name_med, prescription.lab, prescription.dosage)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_prescriptions
-from consult natural left outer join participation natural left outer join prescription natural left outer join consult_diagnosis natural left outer join proced;
-
+from consult natural left outer join participation natural left outer join prescription natural left outer join consult_diagnosis natural left outer join proced
+where YEAR(date_timestamp) = 2017;
 
 
 --7
-/*
-select name2, max(count(*))
-from consult_diagnosis , generalization_species
-where species_name='dog' and consult_diagnosis.name=generalization_species.name2
-group by code
-*/
-
 select name1 as breed, diagnosis_code.name
 from generalization_species inner join animal on species_name = name1
 natural join consult_diagnosis
 inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-where name2 = 'dog' and counter >
-
-with table(counter, breed, name3) as(
-  select count(*), name1, diagnosis_code.name
+where name2 = 'dog' group by breed, diagnosis_code.name
+having count(*) >= all(
+  select count(*)
   from generalization_species inner join animal on species_name = name1
   natural join consult_diagnosis
   inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-  where name2 = 'dog' group by breed, diagnosis_code.name)
-select breed, name3
-from table
-where table.counter >= all(table.counter);
-
-
---funciona
-  select name1 as breed, diagnosis_code.name
-  from generalization_species inner join animal on species_name = name1
-  natural join consult_diagnosis
-  inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-  where name2 = 'dog' group by breed, diagnosis_code.name
-  having count(*) >= all(
-    select count(*)
-    from generalization_species inner join animal on species_name = name1
-    natural join consult_diagnosis
-    inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
-    where name2 = 'dog' group by breed, diagnosis_code.name);
+  where name2 = 'dog' group by breed, diagnosis_code.name);
 
 --8
 select name
