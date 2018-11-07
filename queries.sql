@@ -70,6 +70,21 @@ having count(*) >= all(
   inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
   where name2 = 'dog' group by breed, diagnosis_code.name);
 
+
+
+select name1 as breed, diagnosis_code.name
+from generalization_species inner join animal on species_name = name1
+natural join consult_diagnosis
+inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
+where name2 = 'dog' group by breed, diagnosis_code.name
+having count(*) >= all(
+  select count(*)
+  from generalization_species inner join animal on species_name = name1
+  natural join consult_diagnosis
+  inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
+  where name2 = 'dog' group by breed, diagnosis_code.name);
+
+
 --8
 select name
 from person natural join client
