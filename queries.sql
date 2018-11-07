@@ -96,15 +96,71 @@ create view dim_date as
 -- checkar a view nº 1
 select date_timestamp, day, month, year
 from dim_date;
-
+)
+/*
+na próxima, n metemos distinct porque eles já são PK
+ */
 
 -- view 2
 create view dim_animal as
-(select name as animal_name, VAT as animal_vat, species_name as species, age
- from animal);
+  (select name as animal_name, VAT as animal_vat, species_name as species, age
+   from animal);
 -- checkar a view nº 2
 select animal_name, animal_vat, species, age
 from dim_animal;
+
+
+create or replace view dim_procedures as
+  (select date_timestamp, name, VAT_owner, count(num) as counter from consult natural left outer join proced group by date_timestamp, name, VAT_owner);
+
+create or replace view dim_medication as
+  (select date_timestamp, name, VAT_owner, count(regime) as counter from consult natural left outer join prescription group by date_timestamp, name, VAT_owner);
+
+--view 3
+create or replace view facts_consults as
+(select dim_animal.animal_name, dim_animal.animal_vat as vat,
+  dim_date.date_timestamp as timestamp,
+  dim_procedures.counter as num_procedures,
+  dim_medication.counter as num_medication
+  from consult
+  inner join dim_animal on consult.name = dim_animal.animal_name and consult.VAT_owner = dim_animal.animal_vat
+  natural join dim_date
+  natural join dim_procedures
+  inner join dim_medication using(date_timestamp, name, VAT_owner));
+
+
+
+
+create or replace view test as
+(select dim_animal.animal_name, dim_animal.animal_vat as vat,
+  dim_date.date_timestamp as timestamp, p.num_procedures as num_procedures,
+  m.num_medication as num_medication
+  from consult
+  inner join dim_animal on consult.name = dim_animal.animal_name and consult.VAT_owner = dim_animal.animal_vat
+  natural join dim_date
+  natural join (select count(num) as num_procedures from proced group by date_timestamp, name, VAT_owner ) as p
+  natural join (select count(regime) as num_medication from prescription group by date_timestamp, name, VAT_owner) as m);
+
+
+
+
+
+
+--funciona
+create or replace view facts_consults as
+(select dim_animal.animal_name, dim_animal.animal_vat as vat,
+  dim_date.date_timestamp as timestamp,
+  dim_procedures.counter as num_procedures,
+  dim_medication.counter as num_medication
+  from consult
+  inner join dim_animal on consult.name = dim_animal.animal_name and consult.VAT_owner = dim_animal.animal_vat
+  natural join dim_date
+  natural join dim_procedures
+  inner join dim_medication using(date_timestamp, name, VAT_owner));
+
+-- checkar a view nº 3
+select name, vat, timestamp, num_procedures, num_medication
+from facts_consults;
 
 --updates:
 
@@ -114,13 +170,12 @@ set address_street='Rua da Bela Vista', address_city='Lisboa', address_zip='2695
 where name='John Smith'
 
 --2
-update indicator natural join produced_indicator natural join test_procedure
-set reference_value= reference_value*1.1
-where units = 'milligrams' and type = 'blood';
-
 update  test_procedure natural join produced_indicator inner join indicator  on produced_indicator.indicator_name=indicator.name
 set reference_value= reference_value*1.1
 where units='milligrams' and type='blood';
+
+--3
+delete from person where name = 'John Smith' and VAT in(select * from client);
 
 --4
 update (consult_diagnosis natural join test_procedure natural join produced_indicator)
@@ -132,17 +187,3 @@ where code = (select code from diagnosis_code where name = 'kidney failure')
 and type = 'blood'
 and indicator_name = 'creatinine level'
 and value > 1;
-
---3
-delete from producted_indicator where VAT_owner in (select VAT from person where name="John Smith");
-delete from test_procedure where VAT_owner in (select VAT from person where name="John Smith");
-delete from performed where VAT_owner in (select VAT from person where name="John Smith");
-delete from proced where VAT_owner in (select VAT from person where name="John Smith");
-delete from prescription where VAT_owner in (select VAT from person where name="John Smith");
-delete from consult_diagnosis where VAT_owner in (select VAT from person where name="John Smith");
-delete from participation where VAT_owner in (select VAT from person where name="John Smith");
-delete from consult where VAT_owner in (select VAT from person where name="John Smith");
-delete from animal where VAT in (select VAT from person where name="John Smith");
-delete from phone_number where VAT in (select VAT from person where name="John Smith");
-delete from client where VAT in (select VAT from person where name="John Smith");
-delete from person where name="John Smith";

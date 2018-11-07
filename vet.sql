@@ -31,24 +31,24 @@ create table phone_number
    (VAT  varchar(255),
     phone  numeric(9, 0),
     primary key(VAT, phone),
-    foreign key(VAT) references person(VAT));
+    foreign key(VAT) references person(VAT) on delete cascade);
 
 create table client
    (VAT varchar(255),
     primary key(VAT),
-    foreign key(VAT) references person(VAT));
+    foreign key(VAT) references person(VAT) on delete cascade);
 
 create table veterinary
   ( VAT varchar(255),
     specialization varchar(255),
     bio varchar(255),
     primary key(VAT),
-    foreign key(VAT) references person(VAT));
+    foreign key(VAT) references person(VAT) on delete cascade);
 
 create table assistant
    (VAT varchar(255),
     primary key(VAT),
-    foreign key(VAT) references person(VAT));
+    foreign key(VAT) references person(VAT) on delete cascade);
 
 create table species
   ( name varchar(255),
@@ -71,12 +71,12 @@ create table animal(
   birth_year date,
   age integer,
   primary key(name, VAT),
-  foreign key(VAT) references client(VAT),
+  foreign key(VAT) references client(VAT) on delete cascade,
   foreign key(species_name) references species(name));
 
 create table consult(
-    name varchar(255),
-      VAT_owner varchar(255),
+  name varchar(255),
+  VAT_owner varchar(255),
   date_timestamp  timestamp,
   s varchar(255),
   o varchar(255),
@@ -86,9 +86,9 @@ create table consult(
   VAT_vet varchar(255),
   weight numeric(5,2),
   primary key(date_timestamp, name, VAT_owner),
-  foreign key(name,VAT_owner) references animal(name,VAT),
-  foreign key(VAT_client) references client(VAT),
-  foreign key(VAT_vet) references veterinary(VAT),
+  foreign key(name,VAT_owner) references animal(name, VAT) on delete cascade,
+  foreign key(VAT_client) references client(VAT) on delete cascade,
+  foreign key(VAT_vet) references veterinary(VAT) on delete cascade,
   check(weight>=0));
 
 create table participation(
@@ -97,8 +97,8 @@ create table participation(
   VAT_owner varchar(255),
   VAT_assistant varchar(255),
   primary key(date_timestamp, name, VAT_owner, VAT_assistant),
-  foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner),
-  foreign key(VAT_assistant) references assistant(VAT));
+  foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner) on delete cascade,
+  foreign key(VAT_assistant) references assistant(VAT) on delete cascade);
 
 create table diagnosis_code
    (code  varchar(255),
@@ -112,7 +112,7 @@ create table consult_diagnosis
     date_timestamp  timestamp,
     primary key(code, date_timestamp, name, VAT_owner),
     foreign key(code) references diagnosis_code(code),
-    foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
+    foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner) on delete cascade);
 
 create table medication
    (name  varchar(255),
@@ -130,7 +130,7 @@ create table prescription
     dosage  numeric(20, 2),
     regime  varchar(255),
     primary key(code, date_timestamp, name, VAT_owner, name_med, lab, dosage),
-    foreign key(code,date_timestamp,name,VAT_owner) references consult_diagnosis(code,date_timestamp,name,VAT_owner) on update cascade,
+    foreign key(code,date_timestamp,name,VAT_owner) references consult_diagnosis(code,date_timestamp,name,VAT_owner) on update cascade on delete cascade,
     foreign key(name_med, lab, dosage) references medication(name, lab, dosage)
 );
 
@@ -148,7 +148,7 @@ create table proced
     VAT_owner  varchar(255),
     description  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner),
-    foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner));
+    foreign key(date_timestamp,name,VAT_owner) references consult(date_timestamp,name,VAT_owner) on delete cascade);
 
 create table performed
    (num  numeric(20, 0),
@@ -157,8 +157,8 @@ create table performed
     VAT_owner  varchar(255),
     VAT_assistant  varchar(255),
     primary key(num, date_timestamp, name, VAT_owner, VAT_assistant),
-    foreign key(num,date_timestamp,name,VAT_owner) references proced(num,date_timestamp,name,VAT_owner),
-    foreign key(VAT_assistant) references assistant(VAT));
+    foreign key(num,date_timestamp,name,VAT_owner) references proced(num,date_timestamp,name,VAT_owner) on delete cascade,
+    foreign key(VAT_assistant) references assistant(VAT) on delete cascade);
 
 create table radiography
    (name  varchar(255),
@@ -167,7 +167,7 @@ create table radiography
     num  numeric(20, 0),
     file  varchar(255),
     primary key(date_timestamp, name, VAT_owner, num),
-       foreign key(num,date_timestamp,name,VAT_owner) references proced(num,date_timestamp,name,VAT_owner));
+    foreign key(num,date_timestamp,name,VAT_owner) references proced(num,date_timestamp,name,VAT_owner) on delete cascade);
 
 create table test_procedure
    (name  varchar(255),
@@ -176,7 +176,7 @@ create table test_procedure
     num  numeric(20, 0),
     type  varchar(255),
     primary key(name, VAT_owner, date_timestamp, num),
-    foreign key(num,date_timestamp,name,VAT_owner) references proced(num,date_timestamp,name,VAT_owner));
+    foreign key(num,date_timestamp,name,VAT_owner) references proced(num,date_timestamp,name,VAT_owner) on delete cascade);
 
 create table produced_indicator
    (name  varchar(255),
@@ -186,7 +186,7 @@ create table produced_indicator
     indicator_name varchar(255),
     value  numeric(20, 1),
     primary key(name, VAT_owner, date_timestamp, num, indicator_name),
-    foreign key(name,VAT_owner,date_timestamp,num) references test_procedure(name,VAT_owner,date_timestamp,num),
+    foreign key(name,VAT_owner,date_timestamp,num) references test_procedure(name,VAT_owner,date_timestamp,num) on delete cascade,
     foreign key(indicator_name) references indicator(name));
 
 
@@ -252,7 +252,7 @@ insert into animal values ('piupiu', '000000015', 'bird', 'yellow', 'male', '199
 insert into animal values ('piupiu2', '000000015', 'clown', 'yellow', 'male', '1997-12-20', 20);
 insert into animal values ('fluffy', '000000002', 'cat', 'black', 'female', '1997-12-27', 20);
 insert into animal values ('alilas', '000000002', 'pug', 'brown', 'male', '1997-03-29', 20);
-insert into animal values ('jekwfnew', '000000006', 'cat', 'brown', 'male', '1997-03-29', 20);
+insert into animal values ('jekwfnew', '000000100', 'cat', 'brown', 'male', '1997-03-29', 20);
 insert into animal values ('alilandro', '000000007', 'rottweiler', 'brown', 'male', '1997-03-29', 20);
 insert into animal values ('nnduiejwk', '000000007', 'cat', 'brown', 'male', '1997-03-29', 20);
 insert into animal values ('Garfield', '000000005', 'cat', 'brown', 'male', '1997-03-29', 20);
