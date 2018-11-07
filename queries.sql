@@ -34,7 +34,7 @@ from person  natural join client
 where VAT not in (select a.VAT from animal a);
 
 --5
-select code, count(distinct medication_name) as counter
+select code, count(distinct name_med) as counter
 from prescription
 group by code
 order by counter asc;
@@ -43,6 +43,18 @@ order by counter asc;
 select count(*)
 from consult natural join consult_diagnosis where date_timestamp>'2017-1-1' ;
 group by consult;
+
+select count(distinct consult.name, consult.VAT_owner, consult.date_timestamp)/(count(distinct animal.VAT, animal.name) as average_consults
+from animal natural left outer join consult;
+
+--this
+select
+count(distinct participation.name, participation.VAT_owner, participation.date_timestamp, participation.VAT_assistant)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_assistants,
+count(distinct proced.name, proced.VAT_owner, proced.date_timestamp, proced.num)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_procedures,
+count(distinct consult_diagnosis.code)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_diagnostic_codes,
+count(distinct prescription.name, prescription.VAT_owner, prescription.date_timestamp, prescription.code, prescription.name_med, prescription.lab, prescription.dosage)/count(distinct consult.name, consult.VAT_owner, consult.date_timestamp) as average_prescriptions
+from consult natural left outer join participation natural left outer join prescription natural left outer join consult_diagnosis natural left outer join proced;
+
 
 
 --7
@@ -154,3 +166,17 @@ where code = (select code from diagnosis_code where name = 'kidney failure')
 and type = 'blood'
 and indicator_name = 'creatinine level'
 and value > 1;
+
+--3
+delete from producted_indicator where VAT_owner in (select VAT from person where name="John Smith");
+delete from test_procedure where VAT_owner in (select VAT from person where name="John Smith");
+delete from performed where VAT_owner in (select VAT from person where name="John Smith");
+delete from proced where VAT_owner in (select VAT from person where name="John Smith");
+delete from prescription where VAT_owner in (select VAT from person where name="John Smith");
+delete from consult_diagnosis where VAT_owner in (select VAT from person where name="John Smith");
+delete from participation where VAT_owner in (select VAT from person where name="John Smith");
+delete from consult where VAT_owner in (select VAT from person where name="John Smith");
+delete from animal where VAT in (select VAT from person where name="John Smith");
+delete from phone_number where VAT in (select VAT from person where name="John Smith");
+delete from client where VAT in (select VAT from person where name="John Smith");
+delete from person where name="John Smith";
