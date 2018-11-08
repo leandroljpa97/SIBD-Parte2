@@ -1,5 +1,5 @@
 --1 meti distinct pq  o mesmo animal pode  ir em datas diferentes ao mm gajo
-select distinct animal.name, O.name, species_name, animal.age
+select distinct animal.name, O.name as owner_name, species_name, animal.age
 from animal natural join consult, person V, person O
 where ((V.name ='John Smith')and V.VAT=VAT_vet)
   and O.VAT=consult.VAT_owner;
@@ -11,7 +11,7 @@ where units = 'milligrams' and reference_value > 100
 order by reference_value desc;
 
 --3
-select person.name, animal.name, species_name, age
+select animal.name, person.name as owner_name, species_name, age
 from client
 natural join animal
 inner join consult on animal.VAT = consult.VAT_owner and animal.name = consult.name
@@ -23,12 +23,12 @@ and date_timestamp in (
   group by a.VAT, a.name);
 
 --4
-select *
+select name, VAT, address_street, address_city, address_zip
 from person natural join client
 where VAT not in (select a.VAT from animal a);
 
 --5
-select code, diagnosis_code.name as medication_name, count(distinct name_med) as counter
+select code, diagnosis_code.name as diagnosis, count(distinct name_med) as counter
 from prescription right outer join diagnosis_code using(code)
 group by code
 order by counter asc;
@@ -43,16 +43,16 @@ from (consult as con) natural left outer join (participation as par) natural lef
 where YEAR(date_timestamp) = 2017;
 
 --7
-select name1, diagnosis_code.name
-from (generalization_species as g1) inner join animal on species_name = name1
+select name1 as species, diagnosis_code.name as diagnosis
+from (generalization_species as g) inner join animal on species_name = name1
 natural join consult_diagnosis
 inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
 where name2 = 'dog' group by name1, diagnosis_code.name
 having count(*) >= all(
   select count(*)
-  from animal natural join consult_diagnosis
-  inner join (diagnosis_code as d2) on consult_diagnosis.code = d2.code
-  where animal.species_name=g1.name1 group by d2.name);
+  from animal as a natural join consult_diagnosis as cd
+  inner join (diagnosis_code as dc) on cd.code = dc.code
+  where a.species_name=g.name1 group by dc.name);
 
 --8
 select name
@@ -63,9 +63,9 @@ where VAT in(
   select VAT from assistant);
 
 --9
-select distinct p.name, p.vat, address_zip, address_city, address_street
+select distinct p.name, address_zip, address_city, address_street
 from person as p inner join animal on p.VAT=animal.VAT
 where p.vat not in(
-  select a2.VAT
-  from animal as a2
-  where a2.species_name not like '%bird%');
+  select VAT
+  from animal
+  where species_name not like '%bird%');

@@ -1,26 +1,26 @@
-drop table if exists produced_indicator cascade;
-drop table if exists test_procedure cascade;
-drop table if exists radiography cascade;
-drop table if exists performed cascade;
-drop table if exists proced cascade;
-drop table if exists indicator cascade;
-drop table if exists prescription cascade;
-drop table if exists medication cascade;
-drop table if exists consult_diagnosis cascade;
-drop table if exists diagnosis_code cascade;
-drop table if exists participation cascade;
-drop table if exists consult cascade;
-drop table if exists animal cascade;
-drop table if exists generalization_species cascade;
-drop table if exists species cascade;
-drop table if exists assistant cascade;
-drop table if exists veterinary cascade;
-drop table if exists client cascade;
-drop table if exists phone_number cascade;
-drop table if exists person cascade;
+drop table if exists produced_indicator;
+drop table if exists test_procedure;
+drop table if exists radiography;
+drop table if exists performed;
+drop table if exists proced;
+drop table if exists indicator;
+drop table if exists prescription;
+drop table if exists medication;
+drop table if exists consult_diagnosis;
+drop table if exists diagnosis_code;
+drop table if exists participation;
+drop table if exists consult;
+drop table if exists animal;
+drop table if exists generalization_species;
+drop table if exists species;
+drop table if exists assistant;
+drop table if exists veterinary;
+drop table if exists client;
+drop table if exists phone_number;
+drop table if exists person;
 
 create table person(
-  VAT numeric(9,0),
+  VAT varchar(20),
   name varchar(255),
   address_street varchar(255),
   address_city varchar(255),
@@ -29,20 +29,20 @@ create table person(
 );
 
 create table phone_number(
-  VAT numeric(9,0),
+  VAT varchar(20),
   phone numeric(9,0),
   primary key(VAT, phone),
   foreign key(VAT) references person(VAT)
 );
 
 create table client(
-  VAT numeric(9,0),
+  VAT varchar(20),
   primary key(VAT),
   foreign key(VAT) references person(VAT)
 );
 
 create table veterinary(
-  VAT numeric(9,0),
+  VAT varchar(20),
   specialization varchar(255),
   bio varchar(255),
   primary key(VAT),
@@ -50,7 +50,7 @@ create table veterinary(
 );
 
 create table assistant(
-  VAT numeric(9,0),
+  VAT varchar(20),
   primary key(VAT),
   foreign key(VAT) references person(VAT)
 );
@@ -71,7 +71,7 @@ create table generalization_species(
 
 create table animal(
   name varchar(255),
-  VAT numeric(9,0),
+  VAT varchar(20),
   species_name varchar(255),
   colour varchar(255),
   gender varchar(255),
@@ -84,14 +84,14 @@ create table animal(
 
 create table consult(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   s varchar(255),
   o varchar(255),
   a varchar(255),
   p varchar(255),
-  VAT_client numeric(9,0),
-  VAT_vet numeric(9,0),
+  VAT_client varchar(20),
+  VAT_vet varchar(20),
   weight numeric(5,2),
   primary key(name, VAT_owner, date_timestamp),
   foreign key(name, VAT_owner) references animal(name, VAT) on delete cascade,
@@ -101,9 +101,9 @@ create table consult(
 
 create table participation(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
-  VAT_assistant numeric(9,0),
+  VAT_assistant varchar(20),
   primary key(name, VAT_owner, date_timestamp, VAT_assistant),
   foreign key(name, VAT_owner, date_timestamp) references consult(name, VAT_owner, date_timestamp) on delete cascade,
   foreign key(VAT_assistant) references assistant(VAT)
@@ -118,7 +118,7 @@ create table diagnosis_code(
 create table consult_diagnosis(
   code varchar(255),
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   primary key(code, name, VAT_owner, date_timestamp),
   foreign key(code) references diagnosis_code(code),
@@ -135,7 +135,7 @@ create table medication(
 create table prescription(
   code varchar(255),
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   name_med varchar(255),
   lab varchar(255),
@@ -156,7 +156,7 @@ create table indicator(
 
 create table proced(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
   description varchar(255),
@@ -166,10 +166,10 @@ create table proced(
 
 create table performed(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
-  VAT_assistant numeric(9,0),
+  VAT_assistant varchar(20),
   primary key(name, VAT_owner, date_timestamp, num, VAT_assistant),
   foreign key(name, VAT_owner, date_timestamp, num) references proced(name, VAT_owner, date_timestamp, num) on delete cascade,
   foreign key(VAT_assistant) references assistant(VAT) on delete cascade
@@ -177,7 +177,7 @@ create table performed(
 
 create table radiography(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
   file varchar(255),
@@ -187,7 +187,7 @@ create table radiography(
 
 create table test_procedure(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
   type varchar(255),
@@ -198,7 +198,7 @@ create table test_procedure(
 
 create table produced_indicator(
   name varchar(255),
-  VAT_owner numeric(9,0),
+  VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
   indicator_name varchar(255),
