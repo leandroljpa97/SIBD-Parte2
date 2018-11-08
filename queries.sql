@@ -12,7 +12,10 @@ order by reference_value desc;
 
 --3
 select person.name, animal.name, species_name, age
-from client natural join animal natural join consult inner join person on client.VAT = person.VAT
+from client
+natural join animal
+inner join consult on animal.VAT = consult.VAT_owner and animal.name = consult.name
+inner join person using(VAT)
 where weight > 30 and (o like '%obesity%' or o like '%obese%')
 and date_timestamp in (
   select max(date_timestamp) from animal as a natural join consult
@@ -21,7 +24,7 @@ and date_timestamp in (
 
 --4
 select *
-from person  natural join client
+from person natural join client
 where VAT not in (select a.VAT from animal a);
 
 --5
