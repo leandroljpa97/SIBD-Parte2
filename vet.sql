@@ -254,7 +254,7 @@ insert into phone_number values(000000020, 910360480);
 insert into client values (000000000);
 insert into client values (000000002);
 insert into client values (000000003);
-insert into client values (000000005); -- added
+insert into client values (000000005);
 insert into client values (000000006);
 insert into client values (000000007);
 insert into client values (000000009);
