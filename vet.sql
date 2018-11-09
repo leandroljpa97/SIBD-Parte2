@@ -21,16 +21,16 @@ drop table if exists person;
 
 create table person(
   VAT varchar(20),
-  name varchar(255),
-  address_street varchar(255),
-  address_city varchar(255),
-  address_zip varchar(255),
+  name varchar(255) not null,
+  address_street varchar(255) not null,
+  address_city varchar(255) not null,
+  address_zip varchar(255) not null,
   primary key(VAT)
 );
 
 create table phone_number(
   VAT varchar(20),
-  phone numeric(9,0),
+  phone numeric(9,0) not null, 
   primary key(VAT, phone),
   foreign key(VAT) references person(VAT)
 );
@@ -43,8 +43,8 @@ create table client(
 
 create table veterinary(
   VAT varchar(20),
-  specialization varchar(255),
-  bio varchar(255),
+  specialization varchar(255) not null, -- is required additional inormation
+  bio varchar(255) not null,
   primary key(VAT),
   foreign key(VAT) references person(VAT)
 );
@@ -57,7 +57,7 @@ create table assistant(
 
 create table species(
   name varchar(255),
-  description varchar(255),
+  description varchar(255) not null,
   primary key(name)
 );
 
@@ -69,34 +69,42 @@ create table generalization_species(
   foreign key(name2) references species(name)
 );
 
+
 create table animal(
   name varchar(255),
   VAT varchar(20),
   species_name varchar(255),
-  colour varchar(255),
-  gender varchar(255),
-  birth_year date,
-  age integer,
+  colour varchar(255) not null,
+  gender varchar(255) not null,
+  birth_year date not null,
+  age integer not null,
   primary key(name, VAT),
   foreign key(VAT) references client(VAT) on delete cascade,
-  foreign key(species_name) references species(name)
+  foreign key(species_name) references species(name),
+  check(birth_year <= current_date),
+  check(age = timestampdiff(YEAR, birth_year, NOW())),
+  check(gender='male' or gender='female' or gender='other')
 );
+
+
 
 create table consult(
   name varchar(255),
   VAT_owner varchar(20),
-  date_timestamp timestamp,
+  date_timestamp timestamp not null,
   s varchar(255),
   o varchar(255),
   a varchar(255),
   p varchar(255),
   VAT_client varchar(20),
   VAT_vet varchar(20),
-  weight numeric(5,2),
+  weight numeric(5,2) not null,
   primary key(name, VAT_owner, date_timestamp),
   foreign key(name, VAT_owner) references animal(name, VAT) on delete cascade,
   foreign key(VAT_client) references client(VAT) on delete cascade,
-  foreign key(VAT_vet) references veterinary(VAT)
+  foreign key(VAT_vet) references veterinary(VAT),
+  check(weight>0),
+  check(date_timestamp <= current_date)
 );
 
 create table participation(
@@ -111,7 +119,7 @@ create table participation(
 
 create table diagnosis_code(
   code varchar(255),
-  name varchar(255),
+  name varchar(255) not null,
   primary key(code)
 );
 
@@ -129,7 +137,8 @@ create table medication(
   name varchar(255),
   lab varchar(255),
   dosage numeric(20, 2),
-  primary key(name, lab, dosage)
+  primary key(name, lab, dosage),
+  check(dosage>=0)
 );
 
 create table prescription(
@@ -148,18 +157,18 @@ create table prescription(
 
 create table indicator(
   name varchar(255),
-  reference_value numeric(10, 2),
-  units varchar(255),
-  description varchar(255),
+  reference_value numeric(10, 2) not null,
+  units varchar(255) not null,
+  description varchar(255) not null,
   primary key(name)
-);
+  );
 
 create table proced(
   name varchar(255),
   VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
-  description varchar(255),
+  description varchar(255) not null,
   primary key(name, VAT_owner, date_timestamp, num),
   foreign key(name, VAT_owner, date_timestamp) references consult(name, VAT_owner, date_timestamp) on delete cascade
 );
@@ -180,7 +189,7 @@ create table radiography(
   VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
-  file varchar(255),
+  file varchar(255) not null,
   primary key(name, VAT_owner, date_timestamp, num),
   foreign key(name, VAT_owner, date_timestamp, num) references proced(name, VAT_owner, date_timestamp, num) on delete cascade
 );
@@ -190,7 +199,7 @@ create table test_procedure(
   VAT_owner varchar(20),
   date_timestamp timestamp,
   num numeric(20, 0),
-  type varchar(255),
+  type varchar(255) not null,
   primary key(name, VAT_owner, date_timestamp, num),
   foreign key(name, VAT_owner, date_timestamp, num) references proced(name, VAT_owner, date_timestamp, num) on delete cascade,
   check(type = 'blood' or type = 'urine')
@@ -202,7 +211,7 @@ create table produced_indicator(
   date_timestamp timestamp,
   num numeric(20, 0),
   indicator_name varchar(255),
-  value numeric(20, 1),
+  value numeric(20, 1) not null,
   primary key(name, VAT_owner, date_timestamp, num, indicator_name),
   foreign key(name, VAT_owner, date_timestamp, num) references test_procedure(name, VAT_owner, date_timestamp, num) on delete cascade,
   foreign key(indicator_name) references indicator(name)
