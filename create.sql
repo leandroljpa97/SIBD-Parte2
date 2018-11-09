@@ -30,7 +30,7 @@ create table person(
 
 create table phone_number(
   VAT varchar(20),
-  phone numeric(9,0) not null, 
+  phone numeric(9,0) not null,
   primary key(VAT, phone),
   foreign key(VAT) references person(VAT)
 );
@@ -43,7 +43,7 @@ create table client(
 
 create table veterinary(
   VAT varchar(20),
-  specialization varchar(255) not null, -- is required additional inormation
+  specialization varchar(255) not null, -- is required additional information
   bio varchar(255) not null,
   primary key(VAT),
   foreign key(VAT) references person(VAT)
@@ -69,7 +69,6 @@ create table generalization_species(
   foreign key(name2) references species(name)
 );
 
-
 create table animal(
   name varchar(255),
   VAT varchar(20),
@@ -85,8 +84,6 @@ create table animal(
   check(age = timestampdiff(YEAR, birth_year, NOW())),
   check(gender='male' or gender='female' or gender='other')
 );
-
-
 
 create table consult(
   name varchar(255),
@@ -216,9 +213,3 @@ create table produced_indicator(
   foreign key(name, VAT_owner, date_timestamp, num) references test_procedure(name, VAT_owner, date_timestamp, num) on delete cascade,
   foreign key(indicator_name) references indicator(name)
 );
-
-/*
-birth_year pode ser data toda?
-gender = male ou female (ou unknown)
-test type = blood ou urine
-mudar os cabeçalhos das views para darem iguais
