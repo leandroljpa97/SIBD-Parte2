@@ -36,7 +36,6 @@ insert into phone_number values('000000014', 936841324);
 insert into phone_number values('000000015', 961351153);
 insert into phone_number values('000000016', 923651254);
 insert into phone_number values('000000017', 937684635);
-insert into phone_number values('000000018', 916353131);
 insert into phone_number values('000000019', 918468344);
 insert into phone_number values('000000020', 910360480);
 
