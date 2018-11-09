@@ -41,18 +41,18 @@ select
   count(distinct proced.name, proced.VAT_owner, proced.date_timestamp, proced.num)/count(distinct con.name, con.VAT_owner, con.date_timestamp) as average_procedures,
   count(distinct consult_diagnosis.code, consult_diagnosis.name, consult_diagnosis.VAT_owner, consult_diagnosis.date_timestamp)/count(distinct con.name, con.VAT_owner, con.date_timestamp) as average_diagnostic_codes,
   count(distinct prescription.name, prescription.VAT_owner, prescription.date_timestamp, prescription.code, prescription.name_med, prescription.lab, prescription.dosage)/count(distinct con.name, con.VAT_owner, con.date_timestamp) as average_prescriptions
-from (consult as con) natural left outer join (participation as par) natural left outer join prescription left outer join consult_diagnosis using(name, VAT_owner, date_timestamp) natural left outer join proced
+from (consult as con) natural left outer join (participation as par) natural left outer join consult_diagnosis natural left outer join prescription natural left outer join proced
 where YEAR(date_timestamp) = 2017;
 
 --7
 select name1 as species, diagnosis_code.name as diagnosis
 from (generalization_species as g) inner join animal on species_name = name1
-natural join consult_diagnosis
-inner join diagnosis_code on consult_diagnosis.code = diagnosis_code.code
+inner join consult_diagnosis on  consult_diagnosis.name = animal.name and consult_diagnosis.VAT_owner = animal.VAT
+inner join diagnosis_code using(code)
 where name2 = 'dog' group by name1, diagnosis_code.name
 having count(*) >= all(
   select count(*)
-  from animal as a natural join consult_diagnosis as cd
+  from animal as a inner join (consult_diagnosis as cd) on cd.name = a.name and cd.VAT_owner = a.VAT
   inner join (diagnosis_code as dc) on cd.code = dc.code
   where a.species_name=g.name1 group by dc.name);
 
